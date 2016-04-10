@@ -15,15 +15,16 @@ func Example_Basic() {
 
 		log.Println(resp.Status)
 	}
-	c := New(2,
-		// decoder function
-		func(j Job) {
 
-			if url, ok := j.Order.(string); ok {
-				handle(url)
-			}
-		},
-	)
+	decoder := func(j Job) {
+		if url, ok := j.Order.(string); ok {
+			handle(url)
+		}
+	}
+
+	c := New(2, func(j Job) {
+		decoder(j)
+	})
 
 	c.Start()
 	urls := []string{
